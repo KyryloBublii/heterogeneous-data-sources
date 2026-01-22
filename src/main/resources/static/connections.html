@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections - Data Integration Platform</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>Connections</h1>
+                <div class="user-info">
+                    <span id="userEmail" class="user-email"></span>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="/dashboard" class="nav-tab">🏠 Dashboard</a>
+            <a href="/sources" class="nav-tab">📁 Sources</a>
+            <a href="/destinations" class="nav-tab">🎯 Destinations</a>
+            <a href="/connections" class="nav-tab active">🔗 Connections</a>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2>Create Connection</h2>
+            <form id="connectionForm" class="connection-form">
+                <div class="form-group">
+                    <label for="connectionSource">Source *</label>
+                    <select id="connectionSource" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="connectionDestination">Destination</label>
+                    <select id="connectionDestination"></select>
+                </div>
+                <div class="form-group">
+                    <label for="connectionRelation">Relation</label>
+                    <select id="connectionRelation" aria-describedby="relationDescriptions"></select>
+                    <div class="relation-help" aria-live="polite">
+                        <p class="relation-help-title">Relation types</p>
+                        <ul id="relationDescriptions" class="relation-help-list"></ul>
+                        <button type="button" id="relationToggle" class="relation-toggle" aria-expanded="false">
+                            Show all relation types
+                        </button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Start Connection</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Recent Connections</h2>
+                <div class="table-actions">
+                    <button id="refreshConnections" class="btn btn-secondary btn-sm">↻ Refresh</button>
+                </div>
+            </div>
+            <div id="connectionsTable">
+                <div class="skeleton-table-row skeleton"></div>
+                <div class="skeleton-table-row skeleton"></div>
+                <div class="skeleton-table-row skeleton"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tableSelectionOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Select Tables &amp; Columns</h2>
+                <button type="button" id="closeTableSelection" class="modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="tableSelectionStatus" class="modal-status">Choose the tables and columns you want to ingest from this source.</p>
+                <div id="tableSelectionContent" class="table-selection-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelTableSelection">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmTableSelection">Start Connection</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/connections.js"></script>
+</body>
+</html>

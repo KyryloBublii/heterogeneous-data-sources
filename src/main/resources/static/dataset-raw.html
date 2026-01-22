@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raw data preview</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header class="page-header">
+        <div>
+            <h1>Raw data preview</h1>
+            <p id="rawDatasetName" class="field-hint"></p>
+        </div>
+        <div class="header-actions">
+            <button id="backToDataset" class="btn btn-ghost">Back to dataset</button>
+        </div>
+    </header>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2>Tables</h2>
+                <p class="field-hint">Select a table to inspect ingested rows.</p>
+            </div>
+            <div class="table-actions">
+                <select id="tableSelect"></select>
+                <button id="refreshRaw" class="btn btn-secondary btn-sm">Refresh</button>
+            </div>
+        </div>
+        <div id="rawTableContainer" class="table-body"></div>
+    </section>
+</div>
+<script src="/js/raw-data.js"></script>
+</body>
+</html>

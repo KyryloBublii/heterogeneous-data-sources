@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Integration Platform</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>Your Profile</h1>
+                <div class="user-info">
+                    <a href="/profile" id="welcomeMessage" class="welcome-link">Welcome, User!</a>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="/dashboard" class="nav-tab">Dashboard</a>
+            <a href="/sources" class="nav-tab">Sources</a>
+            <a href="/datasets" class="nav-tab">Datasets</a>
+            <a href="/explore" class="nav-tab">Explore Data</a>
+        </div>
+
+        <main class="profile-layout">
+            <section class="profile-card">
+                <div class="profile-content">
+                    <div class="profile-identity">
+                        <div class="avatar" aria-hidden="true">👤</div>
+                        <div>
+                            <h2 id="profileName">User</h2>
+                            <p class="text-muted" id="profileEmail">user@example.com</p>
+                        </div>
+                    </div>
+                    <dl class="profile-details">
+                        <div>
+                            <dt>Name</dt>
+                            <dd id="profileDisplayName">User</dd>
+                        </div>
+                        <div>
+                            <dt>Email</dt>
+                            <dd id="profileDisplayEmail">user@example.com</dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="profile-actions">
+                    <div class="delete-account-trigger">
+                        <button id="showDeleteAccount" class="btn btn-danger">Delete Account</button>
+                    </div>
+                    <div id="deleteAccountSection" class="hidden">
+                        <div>
+                            <h3>Delete account</h3>
+                            <p class="text-muted">Enter your password to permanently remove your account.</p>
+                        </div>
+                        <form id="deleteAccountForm" class="danger-card">
+                            <div class="form-group">
+                                <label for="deletePassword">Password</label>
+                                <input type="password" id="deletePassword" name="password" required placeholder="Enter your password" />
+                            </div>
+                            <div class="action-row">
+                                <button type="submit" class="btn btn-danger">Delete Account</button>
+                                <p class="form-message" id="deleteAccountMessage" role="alert"></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/profile.js"></script>
+</body>
+</html>

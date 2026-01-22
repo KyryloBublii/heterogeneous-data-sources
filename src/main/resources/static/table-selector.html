@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Tables</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --primary: #4a67ff;
+            --text: #1f2933;
+            --muted: #5f6b7a;
+            --border: #e0e6f0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .card {
+            background: var(--card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .card header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .card h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .card p {
+            margin: 4px 0 0 0;
+            color: var(--muted);
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        button.primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(74, 103, 255, 0.25);
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        button.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(74, 103, 255, 0.3);
+        }
+        button.primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .state {
+            padding: 12px;
+            border-radius: 10px;
+            background: #f0f4ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .error {
+            padding: 12px;
+            border-radius: 10px;
+            background: #ffecec;
+            color: #c0392b;
+            border: 1px solid #f5b7b1;
+        }
+        .schema-list {
+            display: grid;
+            gap: 12px;
+        }
+        .schema-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: #fafbff;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        .schema-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+        .schema-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .schema-header label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .schema-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .table-item {
+            padding: 10px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+        }
+        .table-item:hover {
+            background: #f7f9ff;
+            border-color: #d4dcff;
+            transform: translateY(-1px);
+        }
+        .table-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .table-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .table-count {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+            padding: 16px;
+        }
+        .selection-summary {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <header>
+        <div>
+            <h1>Choose tables for this source</h1>
+            <p>Select schemas and tables after the platform discovers them.</p>
+        </div>
+        <div class="actions">
+            <button id="continueBtn" class="primary">Continue</button>
+        </div>
+    </header>
+
+    <div id="statusArea" class="state" style="display: none;">Loading tables...</div>
+    <div id="errorArea" class="error" style="display: none;"></div>
+    <div id="schemaList" class="schema-list"></div>
+    <div id="emptyArea" class="empty-state" style="display: none;">No tables found.</div>
+    <div id="selectionSummary" class="selection-summary" style="display: none;"></div>
+</div>
+
+<script>
+    const continueBtn = document.getElementById('continueBtn');
+    const statusArea = document.getElementById('statusArea');
+    const errorArea = document.getElementById('errorArea');
+    const schemaList = document.getElementById('schemaList');
+    const emptyArea = document.getElementById('emptyArea');
+    const selectionSummary = document.getElementById('selectionSummary');
+
+    let schemaData = [];
+    let selectedSchemas = new Set();
+    let selectedTables = new Set();
+
+    continueBtn.addEventListener('click', () => {
+        loadTables();
+    });
+
+    function showLoading() {
+        statusArea.style.display = 'block';
+        statusArea.textContent = 'Loading tables…';
+        errorArea.style.display = 'none';
+        schemaList.innerHTML = '';
+        emptyArea.style.display = 'none';
+        selectionSummary.style.display = 'none';
+    }
+
+    function showError(message) {
+        statusArea.style.display = 'none';
+        errorArea.style.display = 'block';
+        errorArea.textContent = message || 'Failed to load tables.';
+        emptyArea.style.display = 'none';
+        schemaList.innerHTML = '';
+        selectionSummary.style.display = 'none';
+    }
+
+    function showEmpty() {
+        statusArea.style.display = 'none';
+        errorArea.style.display = 'none';
+        schemaList.innerHTML = '';
+        emptyArea.style.display = 'block';
+        selectionSummary.style.display = 'none';
+    }
+
+    function renderSchemas(data) {
+        statusArea.style.display = 'none';
+        errorArea.style.display = 'none';
+        emptyArea.style.display = data.length === 0 ? 'block' : 'none';
+        selectionSummary.style.display = data.length === 0 ? 'none' : 'block';
+
+        schemaList.innerHTML = data.map((schema, schemaIndex) => {
+            const schemaId = `schema-${schemaIndex}`;
+            const isSchemaChecked = selectedSchemas.size === 0 || selectedSchemas.has(schema.name);
+            const tablesHtml = schema.tables.map((table, tableIndex) => {
+                const tableId = `table-${schemaIndex}-${tableIndex}`;
+                const key = `${schema.name}.${table.name}`;
+                const checked = selectedTables.size === 0 || selectedTables.has(key);
+                return `
+                    <label class="table-item" for="${tableId}">
+                        <input type="checkbox" id="${tableId}" data-schema="${schema.name}" data-table="${table.name}" ${checked ? 'checked' : ''}>
+                        <div class="table-label">
+                            <span class="table-name">${table.name}</span>
+                            <span class="table-count">${table.columns.length} columns</span>
+                        </div>
+                    </label>
+                `;
+            }).join('');
+
+            return `
+                <div class="schema-card">
+                    <div class="schema-header">
+                        <label for="${schemaId}">
+                            <input type="checkbox" id="${schemaId}" data-schema-name="${schema.name}" ${isSchemaChecked ? 'checked' : ''}>
+                            <span>${schema.name}</span>
+                        </label>
+                        <span class="schema-meta">${schema.tables.length} table${schema.tables.length === 1 ? '' : 's'}</span>
+                    </div>
+                    <div class="table-grid" data-schema="${schema.name}">${tablesHtml}</div>
+                </div>
+            `;
+        }).join('');
+
+        schemaList.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if (cb.dataset.schemaName) {
+                cb.addEventListener('change', handleSchemaToggle);
+            } else if (cb.dataset.table) {
+                cb.addEventListener('change', handleTableToggle);
+            }
+        });
+
+        updateSelectionSummary();
+    }
+
+    function handleSchemaToggle(event) {
+        const schemaName = event.target.dataset.schemaName;
+        const isChecked = event.target.checked;
+        if (!schemaName) return;
+        const tableCheckboxes = schemaList.querySelectorAll(`.table-grid[data-schema="${schemaName}"] input[type="checkbox"]`);
+        tableCheckboxes.forEach(cb => {
+            cb.checked = isChecked;
+            handleTableToggle({ target: cb, silent: true });
+        });
+        if (isChecked) {
+            selectedSchemas.add(schemaName);
+        } else {
+            selectedSchemas.delete(schemaName);
+        }
+        updateSelectionSummary();
+    }
+
+    function handleTableToggle(event) {
+        const { schema, table } = event.target.dataset;
+        const key = `${schema}.${table}`;
+        if (event.target.checked) {
+            selectedTables.add(key);
+        } else {
+            selectedTables.delete(key);
+        }
+        if (!event.silent) {
+            const parentSchema = schemaList.querySelector(`input[data-schema-name="${schema}"]`);
+            if (parentSchema) {
+                const tablesInSchema = schemaList.querySelectorAll(`.table-grid[data-schema="${schema}"] input[type="checkbox"]`);
+                const allChecked = Array.from(tablesInSchema).every(cb => cb.checked);
+                parentSchema.checked = allChecked;
+                if (allChecked) {
+                    selectedSchemas.add(schema);
+                } else {
+                    selectedSchemas.delete(schema);
+                }
+            }
+        }
+        updateSelectionSummary();
+    }
+
+    function updateSelectionSummary() {
+        const tableCount = selectedTables.size || schemaData.reduce((acc, schema) => acc + schema.tables.length, 0);
+        const schemaCount = selectedSchemas.size || schemaData.length;
+        selectionSummary.textContent = `Selected ${schemaCount} schema${schemaCount === 1 ? '' : 's'} and ${tableCount} table${tableCount === 1 ? '' : 's'}.`;
+    }
+
+    async function loadTables() {
+        showLoading();
+        const sourceId = new URLSearchParams(window.location.search).get('sourceId');
+        try {
+            const tables = await fetchTablesWithDelay(sourceId);
+            schemaData = groupBySchema(tables);
+            selectedSchemas = new Set();
+            selectedTables = new Set();
+            if (!schemaData.length) {
+                showEmpty();
+                return;
+            }
+            renderSchemas(schemaData);
+        } catch (error) {
+            console.error('Failed to load tables', error);
+            showError(error.message || 'Unable to load tables.');
+        }
+    }
+
+    async function fetchTablesWithDelay(sourceId) {
+        const MIN_DELAY_MS = 900;
+        const start = performance.now();
+        const tables = await fetchTables(sourceId);
+        const elapsed = performance.now() - start;
+        const remaining = Math.max(0, MIN_DELAY_MS - elapsed);
+        if (remaining) {
+            await new Promise(resolve => setTimeout(resolve, remaining));
+        }
+        return tables;
+    }
+
+    async function fetchTables(sourceId) {
+        if (!sourceId) {
+            return getMockTables();
+        }
+        const response = await fetch(`/api/sources/${encodeURIComponent(sourceId)}/schema`);
+        if (!response.ok) {
+            throw new Error('Server returned an error while fetching tables.');
+        }
+        const payload = await response.json();
+        return Array.isArray(payload) ? payload : [];
+    }
+
+    function groupBySchema(tables) {
+        const grouped = {};
+        tables.forEach((entry) => {
+            const schema = entry.schema || 'default';
+            const name = entry.table || entry.name || 'table';
+            const columns = Array.isArray(entry.columns) ? entry.columns : (entry.fields || []);
+            if (!grouped[schema]) {
+                grouped[schema] = [];
+            }
+            grouped[schema].push({ name, columns });
+        });
+        return Object.entries(grouped).map(([name, tables]) => ({ name, tables }));
+    }
+
+    function getMockTables() {
+        return [
+            {
+                schema: 'public',
+                name: 'orders',
+                columns: ['order_id', 'customer_id', 'status', 'currency', 'ordered_at', 'order_total']
+            },
+            {
+                schema: 'public',
+                name: 'customers',
+                columns: ['customer_id', 'first_name', 'last_name', 'email', 'loyalty_status', 'created_at']
+            },
+            {
+                schema: 'analytics',
+                name: 'events',
+                columns: ['event_id', 'order_id', 'event_type', 'occurred_at']
+            }
+        ];
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Integration Platform</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Data Integration Dashboard</h1>
+                <div class="user-info">
+                    <a href="/profile" id="welcomeMessage" class="welcome-link">Welcome, User!</a>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-tabs">
+            <a href="/dashboard" class="nav-tab active">Dashboard</a>
+            <a href="/sources" class="nav-tab">Sources</a>
+            <a href="/datasets" class="nav-tab">Datasets</a>
+            <a href="/explore" class="nav-tab">Explore Data</a>
+        </div>
+
+        <main class="dashboard-content">
+            <div class="info-section">
+                <h2>Getting Started</h2>
+                <div class="info-content">
+                    <p><strong>1. Add a Data Source</strong> - Connect your CSV files or databases</p>
+                    <p><strong>2. Run Ingestion</strong> - Pull data from your sources into the platform</p>
+                    <p><strong>3. Transform Data</strong> - Run ETL transforms to unify your data</p>
+                    <p><strong>4. Explore & Export</strong> - Query, visualize, and export your unified data</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

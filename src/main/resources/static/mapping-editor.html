@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapping editor</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="page">
+<div class="container">
+    <header class="page-header">
+        <div>
+            <p class="eyebrow">Mapping editor</p>
+            <h1 id="editor-dataset-name">Dataset</h1>
+        </div>
+        <div class="header-actions">
+            <a class="btn" id="back-to-dataset">Back to dataset</a>
+            <button class="btn primary" id="save-mapping">Done</button>
+        </div>
+    </header>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2>Source tables</h2>
+                <p class="muted">Preview discovered tables and pick unified columns.</p>
+            </div>
+            <div class="card-actions">
+                <select id="table-selector"></select>
+                <button class="btn" id="refresh-preview">Refresh</button>
+            </div>
+        </div>
+        <div id="mapping-grid" class="scrollable"></div>
+    </section>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/mapping-editor.js"></script>
+</body>
+</html>

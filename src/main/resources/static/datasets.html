@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Integration Platform - Datasets</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>Datasets</h1>
+                <div class="user-info">
+                    <a href="/profile" id="welcomeMessage" class="welcome-link">Welcome, User!</a>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="/dashboard" class="nav-tab">Dashboard</a>
+            <a href="/sources" class="nav-tab">Sources</a>
+            <a href="/datasets" class="nav-tab active">Datasets</a>
+            <a href="/explore" class="nav-tab">Explore Data</a>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div>
+                    <h2>Managed Datasets</h2>
+                    <p class="field-hint">Create datasets, manage metadata, and connect sources.</p>
+                </div>
+                <div class="table-actions">
+                    <button id="refreshDatasets" class="btn btn-secondary btn-sm">↻ Refresh</button>
+                    <button id="addDatasetBtn" class="btn btn-primary btn-sm">+ New Dataset</button>
+                </div>
+            </div>
+            <div id="datasetsTable">
+                <div class="skeleton-table-row skeleton"></div>
+                <div class="skeleton-table-row skeleton"></div>
+                <div class="skeleton-table-row skeleton"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addDatasetModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Dataset</h2>
+                <button class="modal-close" onclick="closeAddDatasetModal()">×</button>
+            </div>
+            <form id="addDatasetForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="datasetName">Name *</label>
+                        <input type="text" id="datasetName" required placeholder="e.g., unified_customers">
+                    </div>
+                    <div class="form-group">
+                        <label for="datasetDescription">Description</label>
+                        <textarea id="datasetDescription" rows="3" placeholder="Describe the dataset scope"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddDatasetModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Dataset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/datasets.js"></script>
+</body>
+</html>

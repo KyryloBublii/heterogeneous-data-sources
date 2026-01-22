@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Integration Platform - Explore Data</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Explore Data</h1>
+            <div class="user-info">
+                <a href="/profile" id="welcomeMessage" class="welcome-link">Welcome, User!</a>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <a href="/dashboard" class="nav-tab">Dashboard</a>
+        <a href="/sources" class="nav-tab">Sources</a>
+        <a href="/datasets" class="nav-tab">Datasets</a>
+        <a href="/explore" class="nav-tab active">Explore Data</a>
+    </div>
+
+    <div class="filters">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="datasetSelect">Dataset for Analysis</label>
+                <select id="datasetSelect">
+                    <option value="">Loading datasets...</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="chartFieldContainer" style="display: none;">
+                <label for="chartField">Chart Dimension</label>
+                <select id="chartField">
+                    <option value="">Select field</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="chartLimitContainer" style="display: none;">
+                <label for="chartLimit">Top Categories</label>
+                <select id="chartLimit">
+                    <option value="5">Top 5</option>
+                    <option value="10">Top 10</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button id="applyFilterBtn" class="btn btn-primary" disabled>Refresh Insights</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="chartSection" style="display: none;" class="chart-container">
+        <h3>Analytics Overview</h3>
+        <canvas id="dataChart" height="80"></canvas>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <h2>Data Preview</h2>
+            <div class="table-actions">
+                <button id="exportBtn" class="btn btn-success btn-sm" disabled>Export CSV</button>
+                <span id="recordCount" style="color: var(--text-secondary); font-size: 0.875rem;"></span>
+            </div>
+        </div>
+
+        <div id="resultsTable">
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p>Choose a dataset to generate insights</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="pagination" class="pagination" style="display: none; padding: 1rem; text-align: center;">
+        <button id="prevBtn" class="btn btn-secondary btn-sm" disabled>← Previous</button>
+        <span id="pageInfo" style="margin: 0 1rem; color: var(--text-secondary);"></span>
+        <button id="nextBtn" class="btn btn-secondary btn-sm" disabled>Next →</button>
+    </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/toast.js"></script>
+<script src="/js/explore.js"></script>
+</body>
+</html>
